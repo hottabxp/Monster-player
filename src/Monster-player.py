@@ -32,6 +32,7 @@ class MonsterApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
         self.playlist_ = Playlist()
 
         self.mythread = None
+        self.isPause = False
 
         self.horizontalSlider.setValue(20) # % громкости при старте приложения
 
@@ -40,7 +41,9 @@ class MonsterApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
         self.stream = 0
 
         self.listWidget.itemDoubleClicked.connect(self.play)
-        self.pushButton_2.clicked.connect(self.pause)
+        self.pushButton_2.clicked.connect(self.click_pause)
+        self.pushButton.clicked.connect(self.click_play)
+        
         self.horizontalSlider.valueChanged.connect(self.changedVolume)
 
         self.stations = self.playlist_.getStations()
@@ -59,7 +62,16 @@ class MonsterApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
       self.bass.SetVolume(self.stream, volume)
 
 
-    def pause(self):
+    def click_play(self):
+        if self.isPause:
+            self.bass.Play(self.stream, True)
+        else:
+            self.play()
+
+
+
+    def click_pause(self):
+        self.isPause = True
         self.bass.Pause(self.stream)
 
 
