@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui.ui'
+# Form implementation generated from reading ui file 'main_ui.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -35,7 +35,7 @@ class Ui_MainWindow(object):
         self.label.setObjectName("label")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 261, 20))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 261, 22))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -47,7 +47,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Monster-player"))
         self.pushButton.setText(_translate("MainWindow", "Play"))
         self.pushButton_2.setText(_translate("MainWindow", "Pause"))
         self.label.setText(_translate("MainWindow", "TextLabel"))

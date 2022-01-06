@@ -1,6 +1,6 @@
 import sys  # sys нужен для передачи argv в QApplication
 from PyQt5 import QtWidgets, QtCore
-import ui  # Это наш конвертированный файл дизайна
+import main_ui  # Это наш конвертированный файл дизайна
 from basslib import Bass
 from playlist import Playlist
 
@@ -25,7 +25,7 @@ class MyThread(QtCore.QThread):
 
 
 
-class ExampleApp(QtWidgets.QMainWindow, ui.Ui_MainWindow):
+class ExampleApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
     def __init__(self):
 
         super().__init__()
