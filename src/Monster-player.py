@@ -17,9 +17,8 @@ class MyThread(QtCore.QThread):
             self.sleep(1)   # "Засыпаем" на 3 секунды
             # Передача данных из потока через сигнал
             x = self.test.ChannelGetTags(self.channel)
-            print(x)
+            # print(x)
             self.mysignal.emit(x)
-            print(self.channel)
 
         print('Stop')
 
@@ -41,28 +40,14 @@ class ExampleApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
         self.bass.init()
         self.stream = 0
 
-        # self.mythread = MyThread(test=self.bass, channel=self.stream)
-        # # self.mythread.started.connect(self.on_started)
-        # # self.mythread.finished.connect(self.on_finished)
-        # self.mythread.mysignal.connect(self.on_change, QtCore.Qt.QueuedConnection)
-        # self.mythread.start()
-        
-
         self.listWidget.itemDoubleClicked.connect(self.play)
 
         self.pushButton_2.clicked.connect(self.pause)
 
-
-        
-
         self.horizontalSlider.valueChanged.connect(self.changedVolume)
-
 
         self.stations = self.playlist_.getStations()
 
-        print(self.stations)
-
-        # entries = ['https://online.rusradio.ua/RusRadio']
         self.listWidget.addItems([x[1] for x in self.stations])
 
     def on_change(self, s):
@@ -73,10 +58,8 @@ class ExampleApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
         return volume
 
     def changedVolume(self):
-          #vol = self.horizontalSlider.value()/100 
       volume = float(self.horizontalSlider.value()/100) # Значение ползунка
       self.bass.SetVolume(self.stream, volume)
-      print(volume)
 
 
     def pause(self):
@@ -90,13 +73,12 @@ class ExampleApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
 
         current = self.listWidget.currentRow()
         url = self.stations[current][2]
-        # url = self.listWidget.currentItem().text()
+
         status = self.bass.Stop(self.stream)
         self.stream = self.bass.StreamCreateURL(url)
         self.bass.SetVolume(self.stream, self.getVolume())
         self.mythread = MyThread(test=self.bass, channel=self.stream)
-        # self.mythread.started.connect(self.on_started)
-        # self.mythread.finished.connect(self.on_finished)
+
         self.mythread.mysignal.connect(self.on_change, QtCore.Qt.QueuedConnection)
         self.mythread.start()
         
