@@ -1,28 +1,29 @@
-import sys  # sys нужен для передачи argv в QApplication
+import sys
 from PyQt5 import QtWidgets, QtCore
-import main_ui  # Это наш конвертированный файл дизайна
+import main_ui
 from basslib import Bass
 from playlist import Playlist
 
 
-class MyThread(QtCore.QThread):
+class ThreadGetTags(QtCore.QThread):
     mysignal = QtCore.pyqtSignal(str)
-    def  __init__(self, parent=None, test=None, channel=None):
-        self.test = test
+    def  __init__(self, parent=None, bass=None, channel=None):
+        self.bass = bass
         self.channel = channel
         QtCore.QThread.__init__(self, parent)
+
     def run(self):
         self.running = True
         while self.running:
             self.sleep(1)
-            x = self.test.ChannelGetTags(self.channel)
-            self.mysignal.emit(x)
+            channel_tags = self.bass.ChannelGetTags(self.channel)
+            self.mysignal.emit(channel_tags)
 
-        print('Stop')
+        # print('Stop')
 
 
 
-class ExampleApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
+class MonsterApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
     def __init__(self):
 
         super().__init__()
@@ -45,27 +46,27 @@ class ExampleApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
         self.stations = self.playlist_.getStations()
         self.listWidget.addItems([x[1] for x in self.stations])
 
-    def on_change(self, s):
+    def on_change(self, string_tag):
 
-        self.label.setText(s)
+        self.label.setText(string_tag)
 
     def getVolume(self):
-        volume = float(self.horizontalSlider.value()/100) # Значение ползунка
+        volume = float(self.horizontalSlider.value()/100)
         return volume
 
     def changedVolume(self):
-      volume = float(self.horizontalSlider.value()/100) # Значение ползунка
+      volume = float(self.horizontalSlider.value()/100)
       self.bass.SetVolume(self.stream, volume)
 
 
     def pause(self):
         self.bass.Pause(self.stream)
 
+
     def play(self):
 
         if self.mythread:
             self.mythread.running = False
-
 
         current = self.listWidget.currentRow()
         url = self.stations[current][2]
@@ -73,17 +74,18 @@ class ExampleApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
         status = self.bass.Stop(self.stream)
         self.stream = self.bass.StreamCreateURL(url)
         self.bass.SetVolume(self.stream, self.getVolume())
-        self.mythread = MyThread(test=self.bass, channel=self.stream)
+        self.mythread = ThreadGetTags(bass=self.bass, channel=self.stream)
 
         self.mythread.mysignal.connect(self.on_change, QtCore.Qt.QueuedConnection)
         self.mythread.start()
-        
-        print(status)
+        # print(status)
         self.bass.Play(self.stream, False) 
+
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)  # Новый экземпляр QApplication
-    window = ExampleApp()  # Создаём объект класса ExampleApp
+    window = MonsterApp()
     window.show()  # Показываем окно
     app.exec_()  # и запускаем приложение
 
