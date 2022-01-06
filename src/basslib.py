@@ -65,7 +65,7 @@ class Bass():
 		if _tags:
 			tags = _tags.decode()[13:-2]
 		else:
-			tags = ''
+			tags = 'Нет данных'
 
 
 		return tags
