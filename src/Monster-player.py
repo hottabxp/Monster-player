@@ -14,10 +14,8 @@ class MyThread(QtCore.QThread):
     def run(self):
         self.running = True
         while self.running:
-            self.sleep(1)   # "Засыпаем" на 3 секунды
-            # Передача данных из потока через сигнал
+            self.sleep(1)
             x = self.test.ChannelGetTags(self.channel)
-            # print(x)
             self.mysignal.emit(x)
 
         print('Stop')
@@ -34,23 +32,21 @@ class ExampleApp(QtWidgets.QMainWindow, main_ui.Ui_MainWindow):
 
         self.mythread = None
 
-        self.horizontalSlider.setValue(20)
+        self.horizontalSlider.setValue(20) # % громкости при старте приложения
 
         self.bass = Bass()
         self.bass.init()
         self.stream = 0
 
         self.listWidget.itemDoubleClicked.connect(self.play)
-
         self.pushButton_2.clicked.connect(self.pause)
-
         self.horizontalSlider.valueChanged.connect(self.changedVolume)
 
         self.stations = self.playlist_.getStations()
-
         self.listWidget.addItems([x[1] for x in self.stations])
 
     def on_change(self, s):
+
         self.label.setText(s)
 
     def getVolume(self):
