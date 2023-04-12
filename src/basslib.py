@@ -1,11 +1,15 @@
 import ctypes
 from ctypes import *
+import sys
 
 
 class Bass():
 
 	def __init__(self):
-		self._bass = ctypes.CDLL('./so/libbass.so')
+		if sys.platform == 'win32':
+			self._bass = ctypes.CDLL('.\\lib\\bass.dll')
+		elif sys.platform == 'linux':
+			self._bass = ctypes.CDLL('./lib/libbass.so')
 
 
 	def init(self):
